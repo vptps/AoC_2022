@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define A 65
 #define B 66
@@ -9,61 +8,27 @@
 #define Y 89
 #define Z 90
 
-char winAgainst(char val)
-{
-    return val == A ? Y : val == B ? Z
-                      : val == C   ? X
-                                   : 0;
-}
-
-char drawAgainst(char val)
-{
-    return val == A ? X : val == B ? Y
-                      : val == C   ? Z
-                                   : 0;
-}
-
-char looseAgainst(char val)
-{
-    return val == A ? Z : val == B ? X
-                      : val == C   ? Y
-                                   : 0;
-}
+char fight[3][3] = {0};
+char winAgainst[3] = {0};
+char drawAgainst[3] = {0};
+char looseAgainst[3] = {0};
 
 int calculate_line_score(char enemy, char you)
 {
     int score = 0;
-
-    if (you == X)
-    {
-        score += 1;
-        score += ((you - enemy) == (X - A)) ? 3 : ((you - enemy) == (X - B)) ? 0
-                                              : ((you - enemy) == (X - C))   ? 6
-                                                                             : 0;
-    }
-    else if (you == Y)
-    {
-        score += 2;
-        score += ((you - enemy) == (Y - A)) ? 6 : ((you - enemy) == (Y - B)) ? 3
-                                              : ((you - enemy) == (Y - C))   ? 0
-                                                                             : 0;
-    }
-    else if (you == Z)
-    {
-        score += 3;
-        score += ((you - enemy) == (Z - A)) ? 0 : ((you - enemy) == (Z - B)) ? 6
-                                              : ((you - enemy) == (Z - C))   ? 3
-                                                                             : 0;
-    }
+    score += (you == X) ? 1 : (you == Y) ? 2
+                          : (you == Z)   ? 3
+                                         : 0;
+    score += fight[enemy - A][you - X];
 
     return score;
 }
 
 char determine_new_move(char enemy, char move)
 {
-    return move == X ? looseAgainst(enemy) : move == Y ? drawAgainst(enemy)
-                                         : move == Z   ? winAgainst(enemy)
-                                                       : 0;
+    return move == X ? looseAgainst[enemy - A] : move == Y ? drawAgainst[enemy - A]
+                                             : move == Z   ? winAgainst[enemy - A]
+                                                           : 0;
 }
 
 int main(void)
@@ -73,6 +38,25 @@ int main(void)
     size_t len = 0;
     ssize_t read;
     int total1, total2 = 0;
+
+    fight[A - A][X - X] = 3;
+    fight[A - A][Y - X] = 6;
+    fight[A - A][Z - X] = 0;
+    fight[B - A][X - X] = 0;
+    fight[B - A][Y - X] = 3;
+    fight[B - A][Z - X] = 6;
+    fight[C - A][X - X] = 6;
+    fight[C - A][Y - X] = 0;
+    fight[C - A][Z - X] = 3;
+    winAgainst[A - A] = Y;
+    winAgainst[B - A] = Z;
+    winAgainst[C - A] = X;
+    drawAgainst[A - A] = X;
+    drawAgainst[B - A] = Y;
+    drawAgainst[C - A] = Z;
+    looseAgainst[A - A] = Z;
+    looseAgainst[B - A] = X;
+    looseAgainst[C - A] = Y;
 
     fp = fopen("./input", "r");
     if (fp == NULL)
