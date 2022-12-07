@@ -1,4 +1,4 @@
-module.exports = { input :`6529
+6529
 8085
 4534
 1503
@@ -2249,4 +2249,3 @@ module.exports = { input :`6529
 6889
 7045
 8717
-`};
